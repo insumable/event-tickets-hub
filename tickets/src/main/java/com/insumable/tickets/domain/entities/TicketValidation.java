@@ -1,5 +1,7 @@
-package com.insumable.tickets.domain;
+package com.insumable.tickets.domain.entities;
 
+import com.insumable.tickets.domain.enums.TicketValidationMethod;
+import com.insumable.tickets.domain.enums.TicketValidationStatusEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

@@ -1,5 +1,6 @@
-package com.insumable.tickets.domain;
+package com.insumable.tickets.domain.entities;
 
+import com.insumable.tickets.domain.enums.EventStatusEnum;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
