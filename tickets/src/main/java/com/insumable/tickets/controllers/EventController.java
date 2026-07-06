@@ -1,8 +1,17 @@
 package com.insumable.tickets.controllers;
 
-import com.insumable.tickets.domain.dtos.*;
-import com.insumable.tickets.domain.entities.Event;
+import static com.insumable.tickets.util.JwtUtil.parseUserId;
+
+import com.insumable.tickets.domain.requests.CreateEventRequest;
 import com.insumable.tickets.domain.requests.UpdateEventRequest;
+import com.insumable.tickets.domain.dtos.CreateEventRequestDto;
+import com.insumable.tickets.domain.dtos.CreateEventResponseDto;
+import com.insumable.tickets.domain.dtos.GetEventDetailsResponseDto;
+import com.insumable.tickets.domain.dtos.ListEventResponseDto;
+import com.insumable.tickets.domain.dtos.UpdateEventRequestDto;
+import com.insumable.tickets.domain.dtos.UpdateEventResponseDto;
+import com.insumable.tickets.domain.entities.Event;
+import com.insumable.tickets.mappers.EventMapper;
 import com.insumable.tickets.services.EventService;
 import jakarta.validation.Valid;
 import java.util.UUID;
