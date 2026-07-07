@@ -3,6 +3,8 @@ package com.insumable.tickets.domain.dtos;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+
+import com.insumable.tickets.domain.enums.EventStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
