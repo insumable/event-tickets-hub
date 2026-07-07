@@ -1,11 +1,15 @@
 package com.insumable.tickets.services.impl;
 
+import com.insumable.tickets.domain.requests.UpdateTicketTypeRequest;
 import com.insumable.tickets.exceptions.EventNotFoundException;
 import com.insumable.tickets.domain.enums.EventStatusEnum;
 import com.insumable.tickets.domain.entities.Event;
 import com.insumable.tickets.domain.entities.TicketType;
 import com.insumable.tickets.domain.entities.User;
 import com.insumable.tickets.domain.requests.CreateEventRequest;
+import com.insumable.tickets.domain.requests.UpdateEventRequest;
+import com.insumable.tickets.exceptions.EventUpdateException;
+import com.insumable.tickets.exceptions.TicketTypeNotFoundException;
 import com.insumable.tickets.exceptions.UserNotFoundException;
 import com.insumable.tickets.repositories.EventRepository;
 import com.insumable.tickets.repositories.UserRepository;

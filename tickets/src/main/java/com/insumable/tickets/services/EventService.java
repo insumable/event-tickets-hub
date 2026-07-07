@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.insumable.tickets.domain.entities.Event;
 import com.insumable.tickets.domain.requests.CreateEventRequest;
+import com.insumable.tickets.domain.requests.UpdateEventRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
