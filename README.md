@@ -53,19 +53,7 @@ A custom `JwtAuthenticationConverter` extracts the `realm_access.roles` claim fr
 4. A QR code is generated for the new ticket and stored as base64.
 5. At the venue, staff scan the QR code (or validate manually); re-scans of an already-validated ticket are marked invalid.
 
-## Getting Started
 
-```bash
-# Start Postgres, Adminer, and Keycloak
-docker compose up -d
-
-# Run the application
-./mvnw spring-boot:run
-```
-
-- App: `http://localhost:8080`
-- Adminer (DB UI): `http://localhost:8888`
-- Keycloak: `http://localhost:9090`
 
 ## API Overview
 
