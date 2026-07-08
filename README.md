@@ -77,8 +77,3 @@ docker compose up -d
 | `GET /api/v1/tickets/**` | Authenticated |
 | `POST /api/v1/ticket-validations` | `STAFF` |
 
-## Roadmap
-
-- [ ] Add unit tests (JUnit 5 / Mockito) for service-layer logic, starting with the pessimistic-locking purchase flow.
-- [ ] Add integration tests with Testcontainers.
-- [ ] Add E2E tests (Cypress) against the frontend.
