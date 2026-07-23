@@ -96,5 +96,5 @@ The project uses Docker and Docker Compose (`docker-compose.yml`) to seamlessly 
 ![QR Ticket](assets/qr-ticket.png)
 *Example of a one-time valid QR code ticket generated for attendees.*
 
-![QR Scanner](assets/qr-scanner.png)
+![QR Scanner](assets/qr-verification.mp4)
 *Built-in QR scanner tool used by staff.*
