@@ -1,4 +1,4 @@
-# Event Ticketing Platform
+# EventTix - Event Ticketing Platform
 
 A Spring Boot backend for managing the full lifecycle of event ticket sales — event creation, ticket purchasing, QR code generation, and staff-side entry validation — secured with role-based OAuth2 authentication via Keycloak.
 
@@ -15,6 +15,23 @@ Organizers create and manage events, attendees browse and purchase tickets, and 
 - **QR code generation** — every purchased ticket receives a unique QR code (via ZXing) used for entry.
 - **Ticket validation** — staff scan a ticket's QR code (or validate manually) at the door; re-scanning an already-validated ticket is flagged invalid, preventing ticket sharing/reuse.
 - **Role-based access control** — `ORGANIZER`, `STAFF`, and public/attendee access enforced centrally in the security configuration.
+
+## User Roles (Keycloak)
+
+The system uses Keycloak to manage three distinct roles:
+
+### 1. Organiser
+*   Full power to create, update, and manage events.
+*   Ability to create different ticket types (e.g., VIP, General Admission, Early Bird) with custom pricing and capacity.
+
+### 2. Attendee
+*   Can browse available events.
+*   Can purchase tickets.
+*   Receives a unique QR code with one-time validity for every ticket purchased.
+
+### 3. Staff
+*   Can view event details they are assigned to.
+*   Access to an in-built QR scanner tool to validate attendee tickets upon entry.
 
 ## Tech Stack
 
@@ -39,11 +56,29 @@ A custom `JwtAuthenticationConverter` extracts the `realm_access.roles` claim fr
 ### Concurrency-Safe Ticket Purchasing
 `TicketTypeServiceImpl.purchaseTicket()` uses a repository method annotated with `@Lock(LockModeType.PESSIMISTIC_WRITE)` to row-lock the `TicketType` before counting existing tickets against total capacity. This prevents two simultaneous purchase requests from both reading "available" and both succeeding — the second transaction waits for the first to commit, then re-validates capacity.
 
-### Stateless Security
-`SessionCreationPolicy.STATELESS` — no server-side session state, so the service scales horizontally without sticky sessions.
-
 ### Centralized Error Handling
 `GlobalExceptionHandler` maps all domain exceptions (`TicketsSoldOutException`, `TicketNotFoundException`, `EventNotFoundException`, `QrCodeGenerationException`, etc.) to consistent HTTP error responses.
+
+## Backend Architecture Details
+
+The Spring Boot backend is structured into several layers for clean separation of concerns:
+
+*   **Entities / Tables (6):** `Event`, `QrCode`, `Ticket`, `TicketType`, `TicketValidation`, `User`.
+*   **Repositories (6):** `EventRepository`, `QrCodeRepository`, `TicketRepository`, `TicketTypeRepository`, `TicketValidationRepository`, `UserRepository`.
+*   **Services (5):** `EventService`, `QrCodeService`, `TicketService`, `TicketTypeService`, `TicketValidationService`.
+*   **Controllers / Endpoints (5):** `EventController`, `PublishedEventController`, `TicketController`, `TicketTypeController`, `TicketValidationController`.
+*   **Configs (4):** `JpaConfiguration`, `JwtAuthenticationConverter`, `QrCodeConfig`, `SecurityConfig`.
+*   **Mappers (3):** `EventMapper`, `TicketMapper`, `TicketValidationMapper`.
+*   **Filters (1):** `UserProvisioningFilter`.
+*   **Exceptions:** Custom exceptions like `EventNotFoundException`, `TicketsSoldOutException`, `QrCodeNotFoundException`, `UserNotFoundException`, `EventTicketException`, etc., are handled by a `GlobalExceptionHandler`.
+
+## Infrastructure & Docker
+
+The project uses Docker and Docker Compose (`docker-compose.yml`) to seamlessly spin up the required infrastructure:
+
+*   **PostgreSQL:** The main relational database for storing all application data.
+*   **Keycloak:** Manages authentication, authorization, and user roles (Organiser, Attendee, Staff).
+*   **Adminer:** A lightweight database management interface (accessible via port 8888) to easily inspect and interact with the PostgreSQL database during development.
 
 ## End-to-End Flow
 
@@ -53,26 +88,13 @@ A custom `JwtAuthenticationConverter` extracts the `realm_access.roles` claim fr
 4. A QR code is generated for the new ticket and stored as base64.
 5. At the venue, staff scan the QR code (or validate manually); re-scans of an already-validated ticket are marked invalid.
 
-## Getting Started
+## Project Images
 
-```bash
-# Start Postgres, Adminer, and Keycloak
-docker compose up -d
+![Organiser Dashboard](assets/organiser-dashboard.png)
+*Organiser dashboard for managing events and ticket types.*
 
-# Run the application
-./mvnw spring-boot:run
-```
+![QR Ticket](assets/qr-ticket.png)
+*Example of a one-time valid QR code ticket generated for attendees.*
 
-- App: `http://localhost:8080`
-- Adminer (DB UI): `http://localhost:8888`
-- Keycloak: `http://localhost:9090`
-
-## API Overview
-
-| Endpoint | Access |
-|---|---|
-| `GET /api/v1/published-events/**` | Public |
-| `POST/PUT/DELETE /api/v1/events` | `ORGANIZER` |
-| `POST /api/v1/events/{eventId}/ticket-types/{ticketTypeId}/tickets` | Authenticated |
-| `GET /api/v1/tickets/**` | Authenticated |
-| `POST /api/v1/ticket-validations` | `STAFF` |
+![QR Scanner](assets/qr-scanner.png)
+*Built-in QR scanner tool used by staff.*
